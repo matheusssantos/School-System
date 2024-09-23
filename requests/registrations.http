@@ -1,0 +1,19 @@
+# Cria uma nova matricula
+POST http://localhost:8080/registrations/new
+Content-Type: application/json
+
+{
+  "studentCode": "CODE0.18028587580196476",
+  "subjectCode": "S001",
+  "classCode": 1
+}
+
+###
+
+# Busca todas as matriculas
+GET http://localhost:8080/registrations
+
+###
+
+# Busca as disciplinas em que um estudante está matriculado
+GET http://localhost:8080/registrations/student/CODE0.18028587580196476

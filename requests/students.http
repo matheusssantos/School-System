@@ -1,0 +1,28 @@
+# Busca todos os estudantes cadastrados
+GET http://localhost:8080/students
+
+###
+
+# Registra um novo estudante
+POST http://localhost:8080/students/create
+Content-Type: application/json
+
+{
+  "name": "Fabio Rabin",
+  "rg": "000.000.000-01",
+  "address": {
+    "street": "Dr Fernando Mendes Ribeiro",
+	  "number": "000",
+	  "zipcode": "92700-00"
+  }
+}
+
+###
+
+# Busca estudante pelo códgio
+GET http://localhost:8080/students/code/CODE0.10164750451176052
+
+###
+
+# Filtra os estudantes pelo nome
+GET http://localhost:8080/students/name/matheus

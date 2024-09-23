@@ -14,6 +14,11 @@ public class ResponseDto<T> {
     this.message = (T) message;
   }
 
+  public ResponseDto(boolean success, T message) {
+    this.success = success;
+    this.message = (T) message;
+  }
+
   public boolean isSuccess() {
     return success;
   }

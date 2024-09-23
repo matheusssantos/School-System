@@ -1,12 +1,12 @@
 package br.pucrs.school_system.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.pucrs.school_system.dtos.CreateStudentDto;
+import br.pucrs.school_system.dtos.ResponseDto;
 import br.pucrs.school_system.models.Student;
 import br.pucrs.school_system.repositories.StudentRepository;
 
@@ -22,11 +22,18 @@ public class StudentService {
    * @param studentDto Dados de registro
    * @return Objecto de estudante
    */
-  public Student register(CreateStudentDto studentDto) {
-    final String code = this.generateCode();
-    final Student student = new Student(studentDto.getName(), studentDto.getRg(), studentDto.getAddress(), code);
-    this.studentRepository.create(student);
-    return student;
+  public ResponseDto<Student> register(CreateStudentDto studentDto) {
+    try {
+      final String code = this.generateCode();
+      Student newStudent = new Student(studentDto.getName(), studentDto.getRg(), studentDto.getAddress(), code);
+      Student student = this.studentRepository.save(newStudent);
+      if (student.equals(null)) {
+        return new ResponseDto<>("Erro ao criar usuário");
+      }
+      return new ResponseDto<>(student);
+    } catch (Error error) {
+      return new ResponseDto<>("Erro interno no servidor");
+    }
   }
 
   /**
@@ -42,28 +49,41 @@ public class StudentService {
    * @param code Código
    * @return Objeto de estudante
    */
-  public Student getByCode(String code) {
-    Optional<Student> student = this.studentRepository.findByCode(code);
-    if (!student.isPresent()) {
-      return null;
+  public ResponseDto<Student> getByCode(String code) {
+    try {
+      Student student = this.studentRepository.findByCode(code);
+      if (student == null) {
+        return new ResponseDto<>("Estudante não encontrado");
+      }
+      return new ResponseDto<>(student);
+    } catch (Error error) {
+      return new ResponseDto<>("Erro interno no servidor");
     }
-    return student.get();
   }
 
   /**
    * Busca todos os estudantes cadastrados
    * @return Lista de estudantes
    */
-  public List<Student> getAll() {
-    return this.studentRepository.findAll();
+  public ResponseDto<List<Student>> getAll() {
+    try {
+      return new ResponseDto<>(this.studentRepository.findAll());
+    } catch (Error error) {
+      return new ResponseDto<>("Erro interno no servidor");
+    }
   }
 
   /**
    * Busca uma lista de estudantes com base no nome
-   * @param name Trecho de nome
+   * @param queryName Trecho de nome
    * @return Lista de estudantes
    */
-  public List<Student> getByName(String name) {
-    return this.studentRepository.findByName(name);
+  public ResponseDto<List<Student>> getByName(String queryName) {
+    try {
+      List<Student> students = this.studentRepository.findByNameContaining(queryName);
+      return new ResponseDto<>(students);
+    } catch (Error error) {
+      return new ResponseDto<>("Erro interno no servidor");
+    }
   }
 }

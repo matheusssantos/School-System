@@ -1,6 +1,5 @@
 package br.pucrs.school_system.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,28 +31,39 @@ public class RegistrationService {
    * @return Objeto de matricula
    */
   public ResponseDto<Registration> register(CreateRegistrationDto registrationDto) {
-    Student student = this.studentService.getByCode(registrationDto.getStudentCode());
-    if (student == null) {
-      return new ResponseDto<>("Erro ao buscar dados do estudante");
+    try {
+      ResponseDto<Student> studentResponse = this.studentService.getByCode(registrationDto.getStudentCode());
+      if (!studentResponse.isSuccess()) {
+        return new ResponseDto<>("Erro ao buscar dados do estudante");
+      }
+  
+      Subject subject = this.subjectService.getByCodes(registrationDto.getSubjectCode(), registrationDto.getClassCode());
+      if (subject == null) {
+        return new ResponseDto<>("Erro ao buscar dados da matéria");
+      }
+  
+      Registration newRegistration = new Registration(studentResponse.getMessage(), subject);
+      Registration registration = this.registrationRespository.save(newRegistration);
+      if (registration == null) {
+        return new ResponseDto<>("Erro salvar nova matricula");
+      }
+
+      return new ResponseDto<>(registration);
+    } catch (Error error) {
+      return new ResponseDto<>("Erro interno no servidor");
     }
-
-    Subject subject = this.subjectService.getByCodes(registrationDto.getSubjectCode(), registrationDto.getClassCode());
-    if (subject == null) {
-      return new ResponseDto<>("Erro ao buscar dados da matéria");
-    }
-
-    final Registration registration = new Registration(student, subject);
-    this.registrationRespository.create(registration);
-
-    return new ResponseDto<>(registration);
   }
 
   /**
    * Busca todas as matriculas efetuadas no sistema
    * @return Lista de matriculas
    */
-  public ArrayList<Registration> getAll() {
-    return this.registrationRespository.findAll();
+  public ResponseDto<List<Registration>> getAll() {
+    try {
+      return new ResponseDto<>(this.registrationRespository.findAll());
+    } catch (Error error) {
+      return new ResponseDto<>("Erro interno no servidor");
+    }
   }
 
   /**
@@ -61,7 +71,11 @@ public class RegistrationService {
    * @param studentCode Código do estudante
    * @return Lista de matriculas
    */
-  public List<Registration> getAllByStudentCode(String studentCode) {
-    return this.registrationRespository.findAllByStudentCode(studentCode);
+  public ResponseDto<List<Registration>> findRegistrationsOfStudent(String studentCode) {
+    try {
+      return new ResponseDto<>(this.registrationRespository.findByStudentCode(studentCode));
+    } catch (Error error) {
+      return new ResponseDto<>("Erro interno no servidor");
+    }
   }
 }

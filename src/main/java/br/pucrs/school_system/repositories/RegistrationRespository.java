@@ -1,40 +1,17 @@
 package br.pucrs.school_system.repositories;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.pucrs.school_system.models.Registration;
-
+import br.pucrs.school_system.models.Subject;
 
 @Repository
-public class RegistrationRespository {
-  
-  private ArrayList<Registration> registrations;
+public interface RegistrationRespository extends JpaRepository<Registration, Integer> {
 
-  public RegistrationRespository() {
-    this.registrations = new ArrayList<>();
-  }
+  List<Registration> findByStudentCode(String code);
 
-  public boolean create(Registration registration) {
-    this.registrations.add(registration);
-    return true;
-  }
-
-  public ArrayList<Registration> findAll() {
-    return this.registrations;
-  }
-
-  public List<Registration> findAllByStudentCode(String studentCode) {
-    return this.registrations.stream()
-        .filter(registration -> registration.getStudent().getCode().equals(studentCode))
-        .toList();
-  }
-
-  public List<Registration> findAllBySubjectCode(String subjectCode) {
-    return this.registrations.stream()
-        .filter(registration -> registration.getSubject().getCode().equals(subjectCode))
-        .toList();
-  }
+  List<Registration> findBySubjectCode(String code);
 }

@@ -25,29 +25,16 @@ public class RegistrationController {
 
   @PostMapping("/new")
   public ResponseDto<Registration> newRegistration(@RequestBody CreateRegistrationDto data) {
-    try {
-      return this.registrationService.register(data);
-    } catch (Error error) {
-      return new ResponseDto<>("Erro interno no servidor");
-    }
+    return this.registrationService.register(data);
   }
 
   @GetMapping("")
-  public ResponseDto<List<Registration>> getRegistrations() {
-    try {
-      return new ResponseDto<>(this.registrationService.getAll());
-    } catch (Error error) {
-      return new ResponseDto<>("Erro interno no servidor");
-    }
+  public ResponseDto<List<Registration>> findRegistrations() {
+    return this.registrationService.getAll();
   }
 
   @GetMapping("/student/{code}")
   public ResponseDto<List<Registration>> getRegistrationsByStudent(@PathVariable String code) {
-    try {
-      return new ResponseDto<>(this.registrationService.getAllByStudentCode(code));
-    } catch (Error error) {
-      return new ResponseDto<>("Erro interno no servidor");
-    }
+    return this.registrationService.findRegistrationsOfStudent(code);
   }
-  
 }

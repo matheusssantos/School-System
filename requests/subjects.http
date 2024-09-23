@@ -1,0 +1,20 @@
+# Busca todas as disciplinas
+GET http://localhost:8080/subjects
+
+###
+
+# Registra uma nova disciplina
+POST http://localhost:8080/subjects/create
+Content-Type: application/json
+
+{
+  "code": "S001",
+  "name": "FDS",
+  "turn": "A",
+  "classCode": 1
+}
+
+###
+
+# Busca todos os estudantes matriculados em uma disciplina
+GET http://localhost:8080/subjects/S001/students

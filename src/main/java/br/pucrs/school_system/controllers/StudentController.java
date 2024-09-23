@@ -25,37 +25,21 @@ public class StudentController {
 
   @PostMapping("/create")
   public ResponseDto<Student> createStudent(@RequestBody CreateStudentDto data) {
-    try {
-      return new ResponseDto<>(this.studentService.register(data));
-    } catch (Error error) {
-      return new ResponseDto<>("Erro interno no servidor");
-    }
+    return this.studentService.register(data);
   }
 
   @GetMapping("/code/{code}")
-  public ResponseDto<Student> getStudentByCode(@PathVariable String code) {
-    try {
-      return new ResponseDto<>(this.studentService.getByCode(code));
-    } catch (Error error) {
-      return new ResponseDto<>("Erro interno no servidor");
-    }
+  public ResponseDto<Student> findStudentByCode(@PathVariable String code) {
+    return this.studentService.getByCode(code);
   }
 
   @GetMapping("/name/{name}")
-  public ResponseDto<List<Student>> getStudentByName(@PathVariable String name) {
-    try {
-      return new ResponseDto<>(this.studentService.getByName(name));
-    } catch (Error error) {
-      return new ResponseDto<>("Erro interno no servidor");
-    }
+  public ResponseDto<List<Student>> findStudentsByName(@PathVariable String name) {
+    return this.studentService.getByName(name);
   }
   
   @GetMapping("")
-  public ResponseDto<List<Student>> getAllStudents() {
-    try {
-      return new ResponseDto<>(this.studentService.getAll());
-    } catch (Error error) {
-      return new ResponseDto<>("Erro interno no servidor");
-    }
+  public ResponseDto<List<Student>> findStudents() {
+    return this.studentService.getAll();
   }
 }

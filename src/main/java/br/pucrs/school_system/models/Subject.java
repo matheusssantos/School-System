@@ -1,10 +1,41 @@
 package br.pucrs.school_system.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.annotations.ManyToAny;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "subjects")
 public class Subject {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
+
+  @Column(nullable = false)
   private String code;
+
+  @Column(nullable = false)
   private String name;
+
+  @Column(nullable = false)
   private Character turn;
+
+  @Column(nullable = false)
   private Integer classCode;
+
+  public Subject() {}
 
   public Subject(String code, String name, Character turn, Integer classCode) {
     this.code = code;
@@ -45,4 +76,7 @@ public class Subject {
     this.classCode = classCode;
   }
 
+  public Integer getId() {
+    return this.id;
+  }
 }
